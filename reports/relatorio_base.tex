@@ -1,0 +1,96 @@
+\documentclass[12pt]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[brazil]{babel}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{url}
+\usepackage{hyperref}
+
+\geometry{a4paper, margin=2.5cm}
+
+\title{Recuperacao de Artigos Cientificos sobre o Uso de Inteligencia Artificial na Educacao}
+\author{Guilherme de Araujo Brandao}
+\date{2026}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+This paper presents an information retrieval system for scientific articles about the use of Artificial Intelligence in Education. The system compares BM25, TF-IDF/KNN, and a hybrid sparse-dense ranking strategy. The evaluation is based on manually created queries and relevance judgments, using P@10, R@10, MAP, and nDCG@10.
+\end{abstract}
+
+\begin{resumo}
+Este trabalho apresenta um sistema de recuperacao de artigos cientificos sobre o uso de Inteligencia Artificial na Educacao. O sistema compara BM25, KNN com TF-IDF e uma estrategia de ranking hibrido. A avaliacao utiliza consultas e julgamentos de relevancia construidos manualmente, com as metricas P@10, R@10, MAP e nDCG@10.
+\end{resumo}
+
+\section{Introducao}
+
+A producao cientifica sobre Inteligencia Artificial na Educacao tem crescido com o avanco de sistemas tutores inteligentes, learning analytics, modelos generativos e grandes modelos de linguagem. Nesse contexto, torna-se necessario construir mecanismos capazes de recuperar artigos relevantes a partir de consultas textuais.
+
+Este trabalho implementa o componente de recuperacao do paradigma Retrieval-Augmented Generation (RAG), concentrando-se no retorno de uma lista ranqueada de artigos cientificos.
+
+\section{Trabalhos Relacionados}
+
+Descrever BM25, TF-IDF, KNN aplicado a recuperacao, recuperacao densa e sistemas RAG.
+
+\section{Metodologia}
+
+\subsection{Escopo da colecao}
+
+O tema definido foi o uso de Inteligencia Artificial na Educacao. Foram utilizadas palavras-chave relacionadas a intelligent tutoring systems, learning analytics, educational data mining, generative AI in education, ChatGPT in education e personalized learning.
+
+\subsection{Coleta dos dados}
+
+A colecao foi construida a partir da API do ArXiv. Para cada artigo, foram armazenados id, titulo, resumo, autores, categorias, data e URL.
+
+\subsection{Pre-processamento}
+
+O texto de cada documento foi formado pela concatenacao do titulo com o resumo. Em seguida, foram aplicadas normalizacao para minusculas, remocao de pontuacao, tokenizacao e remocao de stopwords.
+
+\subsection{Recuperador BM25}
+
+O BM25 foi utilizado como baseline esparso. Os parametros adotados foram $k_1=1.5$ e $b=0.75$.
+
+\subsection{Recuperador KNN com TF-IDF}
+
+O segundo recuperador representa documentos e consultas por vetores TF-IDF. A similaridade entre consulta e documento foi calculada com similaridade do cosseno, retornando os documentos mais proximos.
+
+\subsection{Ranking hibrido}
+
+Como modulo de aprofundamento, foi implementado um ranking hibrido combinando os scores normalizados de BM25 e KNN/TF-IDF.
+
+\section{Avaliacao Experimental}
+
+Foram criadas consultas representativas do tema e julgamentos de relevancia no formato qrels. As metricas utilizadas foram P@10, R@10, MAP e nDCG@10.
+
+\section{Resultados e Discussao}
+
+Inserir tabela com resultados dos tres sistemas: BM25, KNN/TF-IDF e hibrido. Discutir em quais consultas cada modelo apresentou melhor desempenho.
+
+\section{Conclusao}
+
+O trabalho apresentou um pipeline completo de recuperacao de artigos cientificos sobre IA na Educacao. Os resultados permitiram comparar abordagens esparsas, vetoriais e hibridas.
+
+\section{Uso de IA Generativa}
+
+Foi utilizado assistente de IA generativa como apoio para organizacao do projeto, estruturacao inicial do codigo e revisao textual. As decisoes metodologicas, execucao dos experimentos e analise dos resultados foram conduzidas pelo autor.
+
+\bibliographystyle{plain}
+\begin{thebibliography}{9}
+
+\bibitem{robertson2009bm25}
+Robertson, S. and Zaragoza, H. The Probabilistic Relevance Framework: BM25 and Beyond. Foundations and Trends in Information Retrieval, 2009.
+
+\bibitem{manning2008ir}
+Manning, C. D., Raghavan, P. and Schutze, H. Introduction to Information Retrieval. Cambridge University Press, 2008.
+
+\bibitem{lewis2020rag}
+Lewis, P. et al. Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks. NeurIPS, 2020.
+
+\end{thebibliography}
+
+\end{document}

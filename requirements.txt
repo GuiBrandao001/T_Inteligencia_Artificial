@@ -1,0 +1,12 @@
+arxiv
+numpy
+pandas
+scikit-learn
+scipy
+tqdm
+matplotlib
+jupyter
+ipykernel
+unidecode
+
+streamlit
