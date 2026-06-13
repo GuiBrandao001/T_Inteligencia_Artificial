@@ -144,7 +144,7 @@ trabalho_ia_educacao_interface_v5/
 Entre na pasta do projeto:
 
 ```bash
-cd trabalho_ia_educacao_interface_v5
+cd T-GUILHERME_BRANDAO
 ```
 
 Crie o ambiente virtual:
