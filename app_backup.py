@@ -1,8 +1,11 @@
-from __future__ import annotations
+"""Interface grafica do projeto.
 
-# Interface gráfica do projeto.
-# Execute com: python -m streamlit run app.py
-# A interface foi pensada como um buscador científico, não como chatbot.
+Execute com:
+    python -m streamlit run app.py
+
+A interface foi pensada como um buscador cientifico, nao como chatbot.
+"""
+from __future__ import annotations
 
 import sys
 from pathlib import Path
@@ -32,7 +35,7 @@ from knn_retriever import KNNRetriever
 
 
 st.set_page_config(
-    page_title="Buscador Científico - IA na Educação",
+    page_title="Buscador Cientifico - IA na Educacao",
     page_icon="🔎",
     layout="wide",
     initial_sidebar_state="expanded",
@@ -220,7 +223,7 @@ CUSTOM_CSS = """
         color: var(--accent) !important;
     }
 
-    /* Dataframes, links, expanders e métricas */
+    /* Dataframes, links, expanders e metricas */
     div[data-testid="stMetric"] {
         background: white;
         border: 1px solid var(--border-soft);
@@ -309,7 +312,7 @@ def results_to_dataframe(results: list[tuple[dict, float]]) -> pd.DataFrame:
             {
                 "rank": rank,
                 "id": doc_id,
-                "título": safe_get(doc, "title"),
+                "titulo": safe_get(doc, "title"),
                 "data": safe_get(doc, "date"),
                 "categorias": safe_get(doc, "categories"),
                 "score": round(float(score), 6),
@@ -322,11 +325,11 @@ def results_to_dataframe(results: list[tuple[dict, float]]) -> pd.DataFrame:
 def render_result_cards(results: list[tuple[dict, float]]) -> None:
     for rank, (doc, score) in enumerate(results, start=1):
         doc_id = safe_get(doc, "id")
-        title = safe_get(doc, "title", "Sem título")
+        title = safe_get(doc, "title", "Sem titulo")
         date = safe_get(doc, "date", "Sem data")
         categories = safe_get(doc, "categories", "Sem categoria")
-        authors = safe_get(doc, "authors", "Autores não informados")
-        abstract = safe_get(doc, "abstract", "Resumo não disponivel")
+        authors = safe_get(doc, "authors", "Autores nao informados")
+        abstract = safe_get(doc, "abstract", "Resumo nao disponivel")
         url = make_arxiv_link(doc_id, safe_get(doc, "url"))
 
         st.markdown(
@@ -351,10 +354,10 @@ def render_result_cards(results: list[tuple[dict, float]]) -> None:
 
 
 def render_evaluation_tab() -> None:
-    st.subheader("Resultados de avaliação")
+    st.subheader("Resultados de avaliacao")
     if RESULTS_CSV_PATH.exists():
-        df = pd.read_csv(RESULTS_CSV_PATH, encoding='utf-8')
-        st.dataframe(df, width='stretch', hide_index=True)
+        df = pd.read_csv(RESULTS_CSV_PATH)
+        st.dataframe(df, use_container_width=True, hide_index=True)
         numeric_cols = [c for c in df.columns if c.lower() not in {"model", "sistema", "run"}]
         if numeric_cols:
             first_text_col = next((c for c in df.columns if c not in numeric_cols), df.columns[0])
@@ -363,7 +366,7 @@ def render_evaluation_tab() -> None:
             chart_df = df[[first_text_col, selected_metric]].set_index(first_text_col)
             st.bar_chart(chart_df)
     else:
-        st.info("Ainda não existe runs/evaluation_results.csv. Rode python run_pipeline.py primeiro.")
+        st.info("Ainda nao existe runs/evaluation_results.csv. Rode python run_pipeline.py primeiro.")
 
     st.markdown(
         """
@@ -375,19 +378,19 @@ def render_evaluation_tab() -> None:
 
 
 def main() -> None:
-    st.markdown('<div class="main-title">Buscador Científico de Artigos</div>', unsafe_allow_html=True)
+    st.markdown('<div class="main-title">Buscador Cientifico de Artigos</div>', unsafe_allow_html=True)
     st.markdown(
-        f'<div class="subtitle">Tema: {THEME}. Interface demonstrativa para o componente de recuperação do RAG.</div>',
+        f'<div class="subtitle">Tema: {THEME}. Interface demonstrativa para o componente de recuperacao do RAG.</div>',
         unsafe_allow_html=True,
     )
 
     if not CORPUS_PATH.exists():
-        st.error("Corpus não encontrado. Verifique data/processed/corpus.jsonl ou rode a coleta.")
+        st.error("Corpus nao encontrado. Verifique data/processed/corpus.jsonl ou rode a coleta.")
         st.stop()
 
     corpus_mtime = CORPUS_PATH.stat().st_mtime
 
-    with st.spinner("Carregando corpus e modelos de recuperação..."):
+    with st.spinner("Carregando corpus e modelos de recuperacao..."):
         docs, bm25, knn, hybrid = load_models(
             str(CORPUS_PATH), corpus_mtime, BM25_K1, BM25_B, HYBRID_ALPHA
         )
@@ -395,8 +398,8 @@ def main() -> None:
     with st.sidebar:
         st.header("Configuracao da busca")
         model_name = st.selectbox(
-            "Modelo de recuperação",
-            ["Híbrido BM25 + KNN", "BM25", "KNN/TF-IDF"],
+            "Modelo de recuperacao",
+            ["Hibrido BM25 + KNN", "BM25", "KNN/TF-IDF"],
             index=0,
         )
         top_k = st.slider("Quantidade de resultados", min_value=3, max_value=30, value=DEFAULT_TOP_K)
@@ -404,7 +407,7 @@ def main() -> None:
         st.caption("Parametros atuais")
         st.write(f"BM25 k1: {BM25_K1}")
         st.write(f"BM25 b: {BM25_B}")
-        st.write(f"Alpha híbrido: {HYBRID_ALPHA}")
+        st.write(f"Alpha hibrido: {HYBRID_ALPHA}")
         st.divider()
         st.caption("Base carregada")
         st.write(f"Documentos: {len(docs)}")
@@ -422,11 +425,11 @@ def main() -> None:
         example_cols = st.columns(4)
         for idx, example_query in enumerate(EXAMPLE_QUERIES):
             with example_cols[idx]:
-                if st.button(example_query, width='stretch', key=f"example_{idx}"):
+                if st.button(example_query, use_container_width=True, key=f"example_{idx}"):
                     st.session_state.query_text = example_query
 
         st.markdown(
-            '<div class="search-help">A consulta e processada pelos recuperadores BM25, KNN/TF-IDF e Híbrido.</div>',
+            '<div class="search-help">A consulta e processada pelos recuperadores BM25, KNN/TF-IDF e Hibrido.</div>',
             unsafe_allow_html=True,
         )
 
@@ -438,13 +441,13 @@ def main() -> None:
                 placeholder="Ex.: intelligent tutoring systems for mathematics learning",
             )
         with col_button:
-            search_button = st.button("Buscar", type="primary", width='stretch')
+            search_button = st.button("Buscar", type="primary", use_container_width=True)
 
         if search_button or query:
             results = search_with_model(model_name, query, top_k, bm25, knn, hybrid)
             st.markdown(f"**Modelo:** {model_name} · **Consulta:** `{query}`")
             table_df = results_to_dataframe(results)
-            st.dataframe(table_df, width='stretch', hide_index=True)
+            st.dataframe(table_df, use_container_width=True, hide_index=True)
             st.download_button(
                 "Baixar resultados em CSV",
                 data=table_df.to_csv(index=False).encode("utf-8"),
@@ -460,7 +463,7 @@ def main() -> None:
             [
                 {
                     "id": safe_get(doc, "id"),
-                    "título": safe_get(doc, "title"),
+                    "titulo": safe_get(doc, "title"),
                     "data": safe_get(doc, "date"),
                     "categorias": safe_get(doc, "categories"),
                     "fonte": safe_get(doc, "source"),
@@ -472,28 +475,28 @@ def main() -> None:
         c1.metric("Documentos", len(docs))
         c2.metric("Categorias distintas", corpus_df["categorias"].nunique())
         c3.metric("Periodo", f"{corpus_df['data'].min()} a {corpus_df['data'].max()}")
-        st.dataframe(corpus_df, width='stretch', hide_index=True)
+        st.dataframe(corpus_df, use_container_width=True, hide_index=True)
 
     with tab_eval:
         render_evaluation_tab()
 
     with tab_about:
-        st.subheader("Por que essa interface não parece um chatbot?")
+        st.subheader("Por que essa interface nao parece um chatbot?")
         st.write(
             "A interface foi estruturada como um buscador academico: o usuario informa uma consulta, "
-            "escolhe o recuperador, visualiza rankings, scores, metadados do artigo e métricas de avaliação. "
-            "Isso reforca que o trabalho implementa o componente de recuperação do RAG, não um assistente conversacional."
+            "escolhe o recuperador, visualiza rankings, scores, metadados do artigo e metricas de avaliacao. "
+            "Isso reforca que o trabalho implementa o componente de recuperacao do RAG, nao um assistente conversacional."
         )
         st.markdown(
             """
             **Fluxo implementado:**
 
-            1. Corpus de artigos científicos sobre IA na Educação.
-            2. Pre-processamento textual de título e resumo.
-            3. Recuperação por BM25.
-            4. Recuperação por KNN com TF-IDF.
+            1. Corpus de artigos cientificos sobre IA na Educacao.
+            2. Pre-processamento textual de titulo e resumo.
+            3. Recuperacao por BM25.
+            4. Recuperacao por KNN com TF-IDF.
             5. Combinacao hibrida BM25 + KNN.
-            6. Avaliacao com queries, qrels e métricas de IR.
+            6. Avaliacao com queries, qrels e metricas de IR.
             """
         )
         st.info("Para a entrega final, use a coleta real do ArXiv e substitua os qrels de exemplo por julgamentos manuais.")
